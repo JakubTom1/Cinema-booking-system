@@ -28,7 +28,7 @@ class Movie(Base):
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     tittle = Column(String(50), index=True)
 
-
+    showings = relationship("Showing", backref=backref("movie"))
 # Model of Price List
 class Pricelist(Base):
     __tablename__ = 'pricelist'
@@ -45,6 +45,7 @@ class Calendar(Base):
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     date = Column(DateTime, index=True)
 
+    showings = relationship("Showing", backref=backref("calendar"))
 
 # Model of Screening room
 class Hall(Base):
@@ -55,7 +56,7 @@ class Hall(Base):
     seats_amount = Column(Integer, index=True)
 
     seats = relationship("Seat", backref=backref("hall"))
-
+    showings = relationship("Showing", backref=backref("hall"))
 
 # Model of Places
 class Seat(Base):
@@ -68,6 +69,36 @@ class Seat(Base):
 
     tickets = relationship("Ticket", backref=backref("seat"))
 
+# Model of Showing
+class Showing(Base):
+    __tablename__ = 'showings'
 
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    id_movies = Column(Integer, ForeignKey('movies.id'))
+    id_hall = Column(Integer, ForeignKey('halls.id'))
+    id_date = Column(Integer, ForeignKey('calendar.id'))
+    hour = Column(Time)
+
+    transactions = relationship("Transaction", backref=backref("showing"))
+# Model of Transaction
+class Transaction(Base):
+    __tablename__ = 'transactions'
+
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    id_users = Column(Integer, ForeignKey('users.id'))
+    id_showings = Column(Integer, ForeignKey('showings.id'))
+    status = Column(String(15), index=True)
+    date = Column(Date)
+    created_at = Column(DateTime, index=True)
+
+    tickets = relationship("Ticket", backref=backref("transaction"))
+
+# Model of Ticket
+class Ticket(Base):
+    __tablename__ = "tickets"
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    id_transaction = Column(Integer, ForeignKey('transactions.id'))
+    id_pricelist = Column(Integer, ForeignKey('pricelist.id'))
+    id_seat = Column(Integer, ForeignKey('seats.id'))
 
 Base.metadata.create_all(engine)
