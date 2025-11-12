@@ -172,4 +172,4 @@ class Answer(Base):
     survey = relationship("Survey", back_populates="answers")
 
 
-Base.metadata.create_all(engine)
+

@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends,  HTTPException
+'''from fastapi import APIRouter, Depends,  HTTPException
 from sqlalchemy.orm import Session
 from backend.crud.admin import create_showing, delete_showing, check_showing_time_difference
 from backend.schemas import ShowingCreate
@@ -24,3 +24,4 @@ def admin_remove_showing(showing_id: int, db: Session = Depends(get_db), current
     if not showing:
         raise HTTPException(status_code=404, detail="Showing not found")
     return delete_showing(db, showing_id)
+'''

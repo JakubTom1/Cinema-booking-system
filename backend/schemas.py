@@ -189,14 +189,14 @@ class Survey(BaseModel):
     description: str
     question1: str
     question2: str
-    question3 = str
-    question4 = str
-    question5 = str
-    question6 = str
-    question7 = str
-    question8 = str
-    question9 = str
-    question10 = str
+    question3: str
+    question4: str
+    question5: str
+    question6: str
+    question7: str
+    question8: str
+    question9: str
+    question10: str
 
 #ANSWER
 class Answer(BaseModel):
@@ -206,11 +206,11 @@ class Answer(BaseModel):
     date: date
     ans_q1: str
     ans_q2: str
-    ans_q3 = str
-    ans_q4 = str
-    ans_q5 = str
-    ans_q6 = str
-    ans_q7 = str
-    ans_q8 = str
-    ans_q9 = str
-    ans_q10 = str
+    ans_q3: str
+    ans_q4: str
+    ans_q5: str
+    ans_q6: str
+    ans_q7: str
+    ans_q8: str
+    ans_q9: str
+    ans_q10: str
