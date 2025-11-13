@@ -9,14 +9,14 @@ from decimal import Decimal
 class UserCreate(BaseModel):
     first_name: str
     last_name: str
-    login: str
+    mail: str
     password: str
 
 class UserResponse(BaseModel):
     id: int
     first_name: str
     last_name: str
-    login: str
+    mail: str
     status: int
 
     class Config:
@@ -83,7 +83,7 @@ class UserRead(BaseModel):
     first_name: str
     last_name: str
     status: int
-    login: str
+    mail: str
 
     class Config:
         orm_mode = True

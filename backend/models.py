@@ -18,7 +18,7 @@ class User(Base):
     first_name = Column(String(15), index=True)
     last_name = Column(String(15), index=True)
     status = Column(Integer, index=True, default=2)  # 0-admin, 1-staff, 2-client
-    login = Column(String(50), unique=True, index=True)
+    mail = Column(String(50), unique=True, index=True)
     password = Column(String(128))
 
     transactions = relationship("Transaction", back_populates="user")
