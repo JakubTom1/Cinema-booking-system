@@ -16,7 +16,7 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 30
 @router.post("/register", response_model=UserResponse)
 async def register_user(user: UserCreate, db: Session = Depends(get_db)):
     # Sprawdzenie czy użytkownik już istnieje
-    db_user = db.query(User).filter(User.login == user.login).first()
+    db_user = db.query(User).filter(User.mail == user.mail).first()
     if db_user:
         raise HTTPException(
             status_code=400,
@@ -28,7 +28,7 @@ async def register_user(user: UserCreate, db: Session = Depends(get_db)):
     db_user = User(
         first_name=user.first_name,
         last_name=user.last_name,
-        login=user.login,
+        mail=user.mail,
         password=hashed_password,
         status=2  # domyślnie klient
     )
@@ -56,7 +56,7 @@ async def login_for_access_token(
     # Utworzenie tokenu
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
-        data={"sub": user.login, "status": user.status},
+        data={"sub": user.mail, "status": user.status},
         expires_delta=access_token_expires
     )
 
