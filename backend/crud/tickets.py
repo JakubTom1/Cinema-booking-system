@@ -66,6 +66,27 @@ def get_pricelist(db: Session, pricelist: List[PricelistRead]):
              .all()
     )
     return query
+def delete_tickets(db: Session, tickets: List[TicketRead]):
+    try:
+        if tickets and len(tickets) > 0:
+            transaction_id = tickets[0].id_transaction
+
+            for ticket in tickets:
+                db.delete(ticket)
+
+            transaction = db.query(Transaction).filter(Transaction.id == transaction_id).first()
+            if transaction:
+                transaction.status = 'cancelled'
+            else:
+                raise HTTPException(status_code=404, detail="Transaction not found")
+
+        db.commit()
+        return {"message": "Tickets deleted and transaction cancelled successfully"}
+
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Error deleting tickets: {str(e)}")
+    # Delete tickets from database and set transaction to "cancelled"
 
 def ticket_info(db: Session, number: int):
     query = db.execute(text(f"""
