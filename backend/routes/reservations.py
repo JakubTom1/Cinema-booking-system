@@ -5,7 +5,7 @@ from backend.crud.transactions import create_transaction, realise_transaction, g
 from backend.routes.auth import get_current_user
 from backend.schemas import TicketCreate, TransactionCreate
 from backend.database import get_db
-from backend.models import Showing, Seat, Ticket, Pricelist
+from backend.models import Showing, Seat, Ticket, Pricelist, User
 from typing import List
 from datetime import timedelta
 router = APIRouter()
@@ -80,7 +80,32 @@ def realise_transaction_endpoint(transaction_id: int, db: Session = Depends(get_
 
 @router.get("/user/transactions")
 def get_user_transactions(current_user: dict = Depends(get_current_user), db: Session = Depends(get_db)):
-    transactions = get_transactions_by_user(db, current_user)
-    if not transactions:
+    username = current_user.get("username")
+    if not username:
+        raise HTTPException(status_code=401, detail="Unauthorized")
+
+    user = db.query(User).filter(User.mail == username).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    results = get_transactions_by_user(db, user.id)
+    if not results:
         raise HTTPException(status_code=404, detail="No transactions found for this user")
-    return transactions
+
+    return results
+
+
+@router.get("/{mail}/transactions")
+def get_user_transactions_by_mail(
+        mail: str,
+        current_user: dict = Depends(get_current_user),
+        db: Session = Depends(get_db)
+):
+    if current_user.get("status") > 1:
+        raise HTTPException(status_code=403, detail="Staff access required")
+
+    user = db.query(User).filter(User.mail == mail).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    return get_transactions_by_user(db, user.id)

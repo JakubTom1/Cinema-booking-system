@@ -52,18 +52,8 @@ def realise_transaction(db: Session, transaction_id: int):
     return None
 
 
-def get_transactions_by_user(db: Session, current_user: dict):
-    username = current_user.get("username")
-    if not username:
-        raise HTTPException(status_code=401, detail="Unauthorized")
-
-    # Pobieramy użytkownika z bazy danych
-    user = db.query(User).filter(User.mail == username).first()
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-
-    # Pobieramy transakcje użytkownika
-    transactions = db.query(Transaction).filter(Transaction.id_users == user.id).all()
+def get_transactions_by_user(db: Session, user_id: int):
+    transactions = db.query(Transaction).filter(Transaction.id_users == user_id).all()
 
     results = []
     for transaction in transactions:
@@ -95,3 +85,4 @@ def get_transactions_by_user(db: Session, current_user: dict):
         })
 
     return results
+

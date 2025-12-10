@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from typing import List
 from backend.database import get_db
 from backend.schemas import TicketRead
-from backend.crud.tickets import delete_tickets
+from backend.crud.tickets import delete_tickets, cancel_transaction_by_id
 from backend.routes.auth import get_current_user
 router = APIRouter()
 
@@ -24,7 +24,7 @@ async def delete_tickets_endpoint(
     Returns:
         Message confirming deletion
     """
-    if current_user.get("status") > 0:
+    if current_user.get("status") > 1:
         raise HTTPException(status_code=403, detail="Stuff access required")
     try:
         result = delete_tickets(db=db, tickets=tickets)
@@ -36,3 +36,13 @@ async def delete_tickets_endpoint(
             status_code=500,
             detail=f"An error occurred while deleting tickets: {str(e)}"
         )
+
+
+@router.delete("/transactions/{transaction_id}/cancel")
+def cancel_transaction_endpoint(
+        transaction_id: int,
+        current_user: dict = Depends(get_current_user),
+        db: Session = Depends(get_db)
+):
+
+    return cancel_transaction_by_id(db, transaction_id)

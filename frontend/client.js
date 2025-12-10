@@ -63,7 +63,7 @@ window.addEventListener("load", async () => {
                         const transactionId = transaction.transaction_id;
 
                         try {
-                            const res = await fetch(`http://localhost:8000/reservations/transactions/${transactionId}/cancel`, {
+                            const res = await fetch(`http://localhost:8000/transactions/${transactionId}/cancel`, {
                                 method: "DELETE",
                                 headers: {
                                     'Authorization': `Bearer ${token}`
@@ -82,6 +82,14 @@ window.addEventListener("load", async () => {
                         }
                     });
                     div.appendChild(refundBtn);
+
+                    const surveyBtn = document.createElement("button");
+                    surveyBtn.textContent = "Wypełnij ankietę";
+                    surveyBtn.classList.add("panel-btn");
+                    surveyBtn.addEventListener("click", () => {
+                        window.open("https://forms.office.com/Pages/ResponsePage.aspx?id=PwOxgOAhgkq7wPBf3M07yL4UR9IZrN9LryLzj7Urv1xUME9DNEFCNkhSRVdDVEM2N042RzFFOUVZUC4u", "_blank");
+                    });
+                    div.appendChild(surveyBtn);
                 } else if (transaction.status === "pending" && showingDate > now) {
                     const payBtn = document.createElement("button");
                     payBtn.textContent = "Opłać";

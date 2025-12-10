@@ -110,3 +110,19 @@ def ticket_info(db: Session, number: int):
     WHERE t.id = {number}
     """))
     return query.all()
+
+
+def cancel_transaction_by_id(db: Session, transaction_id: int):
+    transaction = db.query(Transaction).filter(Transaction.id == transaction_id).first()
+    if not transaction:
+        raise HTTPException(status_code=404, detail="Transaction not found")
+
+    tickets = db.query(Ticket).filter(Ticket.id_transaction == transaction_id).all()
+
+    for ticket in tickets:
+        db.delete(ticket)
+
+    transaction.status = 'cancelled'
+
+    db.commit()
+    return {"message": "Transaction cancelled successfully"}
