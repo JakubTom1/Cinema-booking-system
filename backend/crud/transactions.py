@@ -58,7 +58,7 @@ def get_transactions_by_user(db: Session, current_user: dict):
         raise HTTPException(status_code=401, detail="Unauthorized")
 
     # Pobieramy użytkownika z bazy danych
-    user = db.query(User).filter(User.login == username).first()
+    user = db.query(User).filter(User.mail == username).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
 
@@ -85,7 +85,7 @@ def get_transactions_by_user(db: Session, current_user: dict):
         results.append({
             "transaction_id": transaction.id,
             "status": transaction.status,
-            "movie_title": movie.tittle,
+            "movie_title": movie.title,
             "date": calendar.date.date(),  # data
             "time": showing.hour,  # godzina seansu
             "hall_number": hall.hall_num,
