@@ -27,7 +27,7 @@ window.addEventListener("DOMContentLoaded", async () => {
         const movie = await res.json();
         const option = document.createElement("option");
         option.value = movie.id;
-        option.textContent = movie.tittle;
+        option.textContent = movie.title;
         movieSelect.appendChild(option);
     } catch (err) {
         console.error("Błąd przy pobieraniu filmu:", err);
